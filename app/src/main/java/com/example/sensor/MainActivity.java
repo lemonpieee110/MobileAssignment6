@@ -22,7 +22,7 @@ import java.text.DecimalFormat;
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
     private SensorManager mgr;
     private TextView txtList;
-    private Sensor accSensor, proxSensor, gravitySensor, stepSensor, magSensor;
+    private Sensor accSensor, proxSensor, gravitySensor, stepSensor, magSensor,lightSensor, orientationSensor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +45,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         gravitySensor = mgr.getDefaultSensor(Sensor.TYPE_GRAVITY);
         stepSensor = mgr.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
         magSensor = mgr.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+        lightSensor = mgr.getDefaultSensor(Sensor.TYPE_LIGHT);
+        orientationSensor = mgr.getDefaultSensor(Sensor.TYPE_ORIENTATION);
     }
 
     @Override
@@ -55,6 +57,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         mgr.registerListener(this, gravitySensor, SensorManager.SENSOR_DELAY_NORMAL);
         mgr.registerListener(this, stepSensor, SensorManager.SENSOR_DELAY_NORMAL);
         mgr.registerListener(this, magSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        mgr.registerListener(this, lightSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        mgr.registerListener(this, orientationSensor, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     protected void onPause() {
@@ -87,6 +91,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         TextView magY = (TextView) magTable.getChildAt(1);
         TextView magZ = (TextView) magTable.getChildAt(2);
 
+        TextView light = (TextView) findViewById((R.id.light));
+
+        TableRow orTable = findViewById(R.id.ori);
+        TextView orX = (TextView) orTable.getChildAt(0);
+        TextView orY = (TextView) orTable.getChildAt(1);
+        TextView orZ = (TextView) orTable.getChildAt(2);
         DecimalFormat df =new DecimalFormat("#0.00");
 
         switch (sensorType) {
@@ -110,6 +120,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 magX.setText(df.format(event.values[0]));
                 magY.setText(df.format(event.values[1]));
                 magZ.setText(df.format(event.values[2]));
+                break;
+            case Sensor.TYPE_LIGHT:
+                light.setText(df.format((event.values[0])));
+                break;
+            case Sensor.TYPE_ORIENTATION:
+                orX.setText(df.format(event.values[0]));
+                orY.setText(df.format(event.values[1]));
+                orZ.setText(df.format(event.values[2]));
                 break;
         }
     }
